@@ -33,12 +33,13 @@ async function main() {
 
   const stream = client.syncFiles(request, metadata);
 
-  stream.on("data", (response: FileResponse) => {
+  stream.on("data", async (response: FileResponse) => {
     let stream = writeStreamsMap.get(response.path);
 
     if (!stream) {
       const newPath = path.resolve(STORAGE_PATH_CLIENT, response.path);
       console.log("newPath", newPath);
+      await fsPromises.mkdir(path.dirname(newPath), { recursive: true });
       stream = createWriteStream(newPath, { encoding: "binary" });
       writeStreamsMap.set(response.path, stream);
     }
