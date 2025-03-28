@@ -1,0 +1,25 @@
+{
+  "name": "file_transfer_grpc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start:client": "ts-node src/client.ts",
+    "start:server": "ts-node src/server.ts",
+    "proto": "npx protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto --ts_proto_out=. ./proto/transfer.proto",
+    "proto:windows": "npx protoc --plugin=./node_modules/.bin/protoc-gen-ts_proto.cmd --ts_proto_out=. --ts_proto_opt=outputServices=grpc-js,useObservable=true ./proto/transfer.proto"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.13.2",
+    "@grpc/proto-loader": "^0.7.13",
+    "rxjs": "^7.8.2",
+    "ts-node": "^10.9.2",
+    "ts-proto": "^2.7.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.14"
+  }
+}
