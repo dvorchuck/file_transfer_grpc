@@ -12,7 +12,7 @@ const STORAGE_PATH_CLIENT = path.resolve("storage-client");
 console.log("STORAGE_PATH_CLIENT", STORAGE_PATH_CLIENT);
 
 async function main() {
-  const writeStreamsMap = new Map<string, WriteStream>();
+  const writeStreamsMap = new Map<string, WriteStream | false>();
   // data prep
   const fileData = await gatherFileData(STORAGE_PATH_CLIENT);
   console.log("fileData", fileData);
@@ -37,8 +37,18 @@ async function main() {
     let stream = writeStreamsMap.get(response.path);
 
     if (!stream) {
+      if (stream === false) {
+        throw new Error(
+          `Server sent second buffer, but the first buffer said the files are same. Path: ${response.path}`
+        );
+      }
+      // empty buffer in the first message means the files are same > don't start the write stream
+      if (response.data.length === 0) {
+        writeStreamsMap.set(response.path, false);
+        return;
+      }
+
       const newPath = path.resolve(STORAGE_PATH_CLIENT, response.path);
-      console.log("newPath", newPath);
       await fsPromises.mkdir(path.dirname(newPath), { recursive: true });
       stream = createWriteStream(newPath, { encoding: "binary" });
       writeStreamsMap.set(response.path, stream);
@@ -55,7 +65,10 @@ async function main() {
       }
     }
 
-    for (const [, writeStream] of writeStreamsMap) {
+    for (const [path, writeStream] of writeStreamsMap) {
+      if (!writeStream) {
+        continue;
+      }
       writeStream.end();
     }
 
