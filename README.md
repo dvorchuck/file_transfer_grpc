@@ -2,7 +2,7 @@
 
 ## TODO
 
-- when calling with all files already synched, the completion time is still high
+- sometimes the copied file do not have a same hash? (there could be an issue where write stream might be closed by the stream end handler?)
 
 ## Startup
 
@@ -19,7 +19,6 @@ The synchronization does not listen to changes in the file system. You neeed to 
 - error handling
 - add update file endpoint so the files in server can be changed (upsert/delete)
 - client internal service (non-grpc) that listens to the client storage and based on changes sends the updates to server
-- server should gatherFileData on startup for each file (not on every request)
 
 ### v2 proto should solve:
 
