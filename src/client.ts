@@ -60,7 +60,7 @@ async function main() {
 
       const newPath = path.resolve(STORAGE_PATH_CLIENT, response.path);
       await fsPromises.mkdir(path.dirname(newPath), { recursive: true });
-      stream = createWriteStream(newPath, { encoding: "binary" });
+      stream = createWriteStream(newPath);
       writeStreamsMap.set(response.path, stream);
     }
 
