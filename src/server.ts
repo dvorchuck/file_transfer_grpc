@@ -35,8 +35,13 @@ const server: FileServiceServer = {
 
     const storage = path.resolve(STORAGE_PATH_SERVER, clientName);
 
+    const startTimeGatherFileData = performance.now();
     const fileDataList = await gatherFileData(storage);
+    console.log(
+      `gatherFileData took ${performance.now() - startTimeGatherFileData}ms`
+    );
 
+    const startSending = performance.now();
     await Promise.all(
       fileDataList.map((fileData) => {
         const fullPath = path.resolve(storage, fileData.path);
@@ -71,6 +76,7 @@ const server: FileServiceServer = {
         });
       })
     );
+    console.log(`only sending data took ${performance.now() - startSending}ms`);
 
     call.end();
   },

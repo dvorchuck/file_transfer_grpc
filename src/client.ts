@@ -62,6 +62,11 @@ async function main() {
   });
 
   stream.on("end", () => {
+    console.log(
+      `streaming (communication + write) completed in ${
+        performance.now() - startTime
+      }ms`
+    );
     for (const file of fileData) {
       if (!writeStreamsMap.has(file.path)) {
         const newPath = path.resolve(STORAGE_PATH_CLIENT, file.path);
