@@ -34,6 +34,7 @@ async function main() {
   metadata.set("clientId", "client-12345"); // This is a custom metadata field
   metadata.set("authToken", "secretToken");
 
+  const startTime = performance.now();
   const stream = client.syncFiles(request, metadata);
 
   stream.on("data", async (response: FileResponse) => {
@@ -77,6 +78,7 @@ async function main() {
 
     writeStreamsMap.clear();
     console.log("File sync completed.");
+    console.log(`completed in ${performance.now() - startTime}ms`);
   });
 
   stream.on("error", (err) => {
