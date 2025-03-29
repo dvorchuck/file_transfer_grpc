@@ -58,7 +58,7 @@ async function main() {
 
       const startSending = performance.now();
       await Promise.all(
-        fileDataList.map((fileData) => {
+        fileDataList.map(async (fileData) => {
           const fileStart = performance.now();
           const fullPath = path.resolve(storage, fileData.path);
 
@@ -76,33 +76,31 @@ async function main() {
             return;
           }
 
-          console.log(
-            `hashes do not match (${fileData.path}) incoming: ${incomingHash}, current: ${fileData.hash}`
-          );
-
           // files are different, or do not exists
-          const fileStream = fs.createReadStream(fullPath);
-
-          return new Promise<void>((resolve, reject) => {
-            fileStream.on("data", (data) => {
+          const fileStream = fs
+            .createReadStream(fullPath)
+            .on("data", (data) => {
               call.write({
                 path: fileData.path,
                 data: data as Buffer,
               });
             });
 
-            fileStream.on("end", () => {
-              console.log(
-                `file "${fileData.path}" took ${
-                  performance.now() - fileStart
-                }ms`
-              );
-              resolve();
-            });
-            fileStream.on("error", reject);
+          return new Promise<void>((resolve, reject) => {
+            fileStream
+              .on("end", () => {
+                console.log(
+                  `file "${fileData.path}" took ${
+                    performance.now() - fileStart
+                  }ms`
+                );
+                resolve();
+              })
+              .on("error", reject);
           });
         })
       );
+
       console.log(
         `only sending data took ${performance.now() - startSending}ms`
       );
