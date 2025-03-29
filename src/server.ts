@@ -27,7 +27,7 @@ async function main() {
   const server: FileServiceServer = {
     syncFiles: async (call) => {
       const startTime = performance.now();
-
+      console.log("-----------------------");
       console.log(
         `Received file sync request for metadata: ${JSON.stringify(
           call.metadata
