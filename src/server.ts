@@ -23,6 +23,12 @@ const server: FileServiceServer = {
       console.error(
         `Expected clientId as a stirng in metadata. Received: ${clientName.toString()}`
       );
+
+      // inspired from https://github.com/grpc/grpc-node/blob/master/examples/error_handling/server.js
+      call.emit("error", {
+        code: grpc.status.INVALID_ARGUMENT, // for detailed erorr handling check other enumerations in grpc.status (for example UNAUTHENTICATED)
+        details: "request missing required metadata field: clientName",
+      });
       call.end();
       return;
     }

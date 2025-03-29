@@ -21,3 +21,8 @@ The synchronization does not listen to changes in the file system. You neeed to 
 - stop write stream when no data would be recieved (instead of waiting for the end of communication)
 - receive delete info right away to start deleting early (instead of waiting for the end of communication)
 - add keep information instead of the magical empty buffer
+
+## Sources
+
+grpc-node examples
+[https://github.com/grpc/grpc-node/tree/master/examples]()

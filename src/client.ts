@@ -29,6 +29,7 @@ async function main() {
     { "grpc.default_compression_algorithm": CompressionAlgorithms.gzip }
   );
 
+  // for advanced metadata handling see https://github.com/grpc/grpc-node/blob/master/examples/metadata/client.js
   const metadata = new grpc.Metadata();
   metadata.set("clientId", "client-12345"); // This is a custom metadata field
   metadata.set("authToken", "secretToken");
