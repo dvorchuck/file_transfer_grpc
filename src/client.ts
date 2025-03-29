@@ -51,7 +51,9 @@ async function main() {
       if (response.data.length === 0) {
         writeStreamsMap.set(response.path, false);
         console.log(
-          `on data writeStreamsMap.set took ${performance.now() - testTime}ms`
+          `already existing "${response.path}" took ${
+            performance.now() - testTime
+          }ms`
         );
         return;
       }
