@@ -8,6 +8,12 @@
 
 The synchronization does not listen to changes in the file system. You neeed to run `npm run start:client` again to sync again.
 
-## TODO
+## Potential improvements
 
-- delete empty folders in client after syncing
+- delete empty folders in client after syncing (currently only files are deleted and not the folders)
+
+### v2 proto should solve:
+
+- stop write stream when no data would be recieved (instead of waiting for the end of communication)
+- receive delete info right away to start deleting early (instead of waiting for the end of communication)
+- add keep information instead of the magical empty buffer
