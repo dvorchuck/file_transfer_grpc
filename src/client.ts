@@ -7,6 +7,7 @@ import {
 import { gatherFileData } from "./file";
 import path from "path";
 import { createWriteStream, WriteStream, promises as fsPromises } from "fs";
+import { CompressionAlgorithms } from "@grpc/grpc-js/build/src/compression-algorithms";
 
 const STORAGE_PATH_CLIENT = path.resolve("storage-client");
 console.log("STORAGE_PATH_CLIENT", STORAGE_PATH_CLIENT);
@@ -24,7 +25,8 @@ async function main() {
   // client
   const client = new FileServiceClient(
     "localhost:50051",
-    grpc.credentials.createInsecure()
+    grpc.credentials.createInsecure(),
+    { "grpc.default_compression_algorithm": CompressionAlgorithms.gzip }
   );
 
   const metadata = new grpc.Metadata();
