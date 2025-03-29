@@ -50,3 +50,11 @@ export async function calculateFileHash(filePath: string): Promise<string> {
     });
   });
 }
+
+export async function getFolders(directoryPath: string) {
+  return fs.promises.readdir(directoryPath).then((files) => {
+    return files.filter((file) =>
+      fs.statSync(path.join(directoryPath, file)).isDirectory()
+    );
+  });
+}

@@ -38,6 +38,7 @@ async function main() {
   const stream = client.syncFiles(request, metadata);
 
   stream.on("data", async (response: FileResponse) => {
+    const testTime = performance.now();
     let stream = writeStreamsMap.get(response.path);
 
     if (!stream) {
@@ -49,6 +50,9 @@ async function main() {
       // empty buffer in the first message means the files are same > don't start the write stream
       if (response.data.length === 0) {
         writeStreamsMap.set(response.path, false);
+        console.log(
+          `on data writeStreamsMap.set took ${performance.now() - testTime}ms`
+        );
         return;
       }
 
