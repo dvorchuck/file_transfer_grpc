@@ -1,5 +1,9 @@
 # file_transfer_grpc
 
+## TODO
+
+- when calling with all files already synched, the completion time is still high
+
 ## Startup
 
 - run `npm run start:server`
