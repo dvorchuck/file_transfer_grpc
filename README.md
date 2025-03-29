@@ -15,6 +15,7 @@ The synchronization does not listen to changes in the file system. You neeed to 
 - error handling
 - add update file endpoint so the files in server can be changed (upsert/delete)
 - client internal service (non-grpc) that listens to the client storage and based on changes sends the updates to server
+- check file hash after copy to ensure correctness
 
 ### v2 proto should solve:
 
