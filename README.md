@@ -11,6 +11,8 @@ The synchronization does not listen to changes in the file system. You neeed to 
 ## Potential improvements
 
 - delete empty folders in client after syncing (currently only files are deleted and not the folders)
+- code cleanup + logging
+- error handling
 
 ### v2 proto should solve:
 
