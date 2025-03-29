@@ -1,9 +1,5 @@
 # file_transfer_grpc
 
-## TODO
-
-- sometimes the copied file do not have a same hash? (there could be an issue where write stream might be closed by the stream end handler?)
-
 ## Startup
 
 - run `npm run start:server`
