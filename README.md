@@ -13,6 +13,8 @@ The synchronization does not listen to changes in the file system. You neeed to 
 - delete empty folders in client after syncing (currently only files are deleted and not the folders)
 - code cleanup + logging
 - error handling
+- add update file endpoint so the files in server can be changed (upsert/delete)
+- client internal service (non-grpc) that listens to the client storage and based on changes sends the updates to server
 
 ### v2 proto should solve:
 
