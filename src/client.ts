@@ -13,7 +13,7 @@ const STORAGE_PATH_CLIENT = path.resolve("storage-client");
 console.log("STORAGE_PATH_CLIENT", STORAGE_PATH_CLIENT);
 
 async function main() {
-  const writeStreamsMap = new Map<string, WriteStream | false>();
+  const writeStreamsMap = new Map<string, Promise<WriteStream> | false>();
   // data prep
   const fileData = await gatherFileData(STORAGE_PATH_CLIENT);
   console.log("fileData", fileData);
@@ -59,15 +59,24 @@ async function main() {
       }
 
       const newPath = path.resolve(STORAGE_PATH_CLIENT, response.path);
-      await fsPromises.mkdir(path.dirname(newPath), { recursive: true });
-      stream = createWriteStream(newPath);
+      // since fs.promises.mkdir is a promise, another data could be processed during the wait causing a double createWriteStream and corrupting data
+      // thats why the map holds writeStreams wrapped in promises. so all the on data will wait and won't create duplicates nor will try to write before the promise resolving.
+      // - also we dont want to block the stream by sync version of the mkdir. That would make doing multiple mkdir concurrently impossible.
+      stream = fsPromises
+        .mkdir(path.dirname(newPath), { recursive: true })
+        .then(() =>
+          createWriteStream(newPath).on("close", () =>
+            console.log(`closed: ${response.path}`)
+          )
+        );
+      console.log(`creating a new write stream: ${response.path}`);
       writeStreamsMap.set(response.path, stream);
     }
 
-    stream.write(response.data);
+    (await stream).write(response.data);
   });
 
-  stream.on("end", () => {
+  stream.on("end", async () => {
     console.log(
       `streaming (communication + write) completed in ${
         performance.now() - startTime
@@ -84,10 +93,9 @@ async function main() {
       if (!writeStream) {
         continue;
       }
-      writeStream.end();
+      (await writeStream).end();
     }
 
-    writeStreamsMap.clear();
     console.log("File sync completed.");
     console.log(`completed in ${performance.now() - startTime}ms`);
   });
